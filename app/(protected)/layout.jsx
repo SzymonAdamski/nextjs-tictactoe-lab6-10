@@ -10,9 +10,9 @@ function Protected({children}) {
 
     useEffect(() => {
         if (!loading && !user) {
-            router.push(`/user/signin?returnUrl=${returnUrl}`);
+            window.location.href = `/user/signin?returnUrl=${returnUrl}`;
         }
-    }, [user, loading, router, returnUrl]);
+    }, [user, loading, returnUrl]);
     
     // Pokaż loading podczas sprawdzania auth
     if (loading) {

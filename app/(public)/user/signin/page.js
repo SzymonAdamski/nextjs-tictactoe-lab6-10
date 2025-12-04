@@ -42,8 +42,10 @@ function SignInFormContent() {
               router.push("/user/verify");
               return;
             }
-            // Użyj window.location.href aby wymusić pełne przeładowanie i odświeżenie AuthContext
-            window.location.href = returnUrl;
+            // Poczekaj chwilę, żeby Firebase Auth zaktualizował stan, potem przekieruj
+            setTimeout(() => {
+              window.location.href = returnUrl;
+            }, 100);
           })
           .catch((error) => {
             setLoading(false);
