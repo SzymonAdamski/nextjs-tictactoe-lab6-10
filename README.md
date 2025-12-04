@@ -2,6 +2,12 @@
 
 Projekt gry w kółko i krzyżyk stworzony dla Laboratorium 6 - zawiera wszystkie wymagane funkcjonalności.
 
+## 🌐 Wersja Live
+
+**Demo dostępne na:** [https://twoj-projekt.vercel.app](https://twoj-projekt.vercel.app) *(wpisz swój link po wdrożeniu)*
+
+Pełna instrukcja wdrożenia znajduje się w pliku [DEPLOYMENT.md](./DEPLOYMENT.md)
+
 ## Funkcje
 
 - ✅ Uwierzytelnianie użytkowników (localStorage + React Context)
@@ -38,10 +44,15 @@ npm run dev
 
 ## Wdrożenie na Vercel
 
-1. Push'uj kod do repozytorium GitHub
+Szczegółowa instrukcja wdrożenia znajduje się w pliku [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+**Krótka instrukcja:**
+1. Wypchnij kod do repozytorium GitHub
 2. Zaloguj się na [vercel.com](https://vercel.com)
-3. Kliknij "New Project" i zaimportuj repozytorium
-4. Kliknij "Deploy" (brak dodatkowych zmiennych środowiskowych)
+3. Kliknij "Add New..." → "Project"
+4. Zaimportuj repozytorium z GitHub
+5. Kliknij "Deploy" (brak dodatkowych zmiennych środowiskowych)
+6. Skopiuj link do wersji live i wklej powyżej w sekcji "Wersja Live"
 
 ## Funkcjonalności gry
 
