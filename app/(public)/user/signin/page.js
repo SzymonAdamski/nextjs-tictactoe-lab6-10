@@ -2,10 +2,10 @@
 import { signInWithEmailAndPassword, setPersistence, browserSessionPersistence } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 
-export default function SignInForm() {
+function SignInFormContent() {
   const params = useSearchParams();
   const router = useRouter();
   const returnUrl = params.get("returnUrl") || "/";
@@ -114,5 +114,13 @@ export default function SignInForm() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function SignInForm() {
+  return (
+    <Suspense fallback={<div style={{ textAlign: 'center', padding: '100px' }}>Ładowanie...</div>}>
+      <SignInFormContent />
+    </Suspense>
   );
 }
