@@ -1,16 +1,26 @@
 'use client'
 import { signInWithEmailAndPassword, setPersistence, browserSessionPersistence } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { useSearchParams, useRouter } from "next/navigation";
-import { useState, Suspense } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 function SignInFormContent() {
-  const params = useSearchParams();
   const router = useRouter();
-  const returnUrl = params.get("returnUrl") || "/";
+  const [returnUrl, setReturnUrl] = useState("/");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const redirectTarget = searchParams.get("returnUrl");
+
+    if (redirectTarget) {
+      setReturnUrl(redirectTarget);
+    }
+  }, []);
   
   const onSubmit = (e) => {
     e.preventDefault();
@@ -24,6 +34,14 @@ function SignInFormContent() {
       .then(() => {
         signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
+            // Sprawdź czy email został zweryfikowany
+            if (!userCredential.user.emailVerified) {
+              setLoading(false);
+              setError('Email nie został zweryfikowany. Sprawdź swoją skrzynkę pocztową.');
+              // Przekieruj do strony weryfikacji
+              router.push("/user/verify");
+              return;
+            }
             router.push(returnUrl);
           })
           .catch((error) => {
@@ -118,9 +136,5 @@ function SignInFormContent() {
 }
 
 export default function SignInForm() {
-  return (
-    <Suspense fallback={<div style={{ textAlign: 'center', padding: '100px' }}>Ładowanie...</div>}>
-      <SignInFormContent />
-    </Suspense>
-  );
+  return <SignInFormContent />;
 }

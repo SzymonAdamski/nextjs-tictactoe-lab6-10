@@ -35,15 +35,39 @@ export default function Navigation() {
         <div className="nav-auth">
           {user ? (
             <>
-              <span style={{ fontSize: '14px' }}>{user.email}</span>
-              <button onClick={logout} className="btn btn-secondary">
-                Wyloguj
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                {user.photoURL && (
+                  <img 
+                    src={user.photoURL} 
+                    alt="Profile" 
+                    style={{ 
+                      width: '32px', 
+                      height: '32px', 
+                      borderRadius: '50%',
+                      objectFit: 'cover'
+                    }}
+                  />
+                )}
+                <span style={{ fontSize: '14px' }}>
+                  {user.displayName || user.email}
+                </span>
+                <Link href="/user/profile" className="btn btn-secondary">
+                  Profil
+                </Link>
+                <Link href="/user/signout" className="btn btn-secondary">
+                  Wyloguj
+                </Link>
+              </div>
             </>
           ) : (
-            <Link href="/login" className="btn btn-primary">
-              Zaloguj się
-            </Link>
+            <>
+              <Link href="/user/signin" className="btn btn-primary">
+                Zaloguj się
+              </Link>
+              <Link href="/user/register" className="btn btn-secondary">
+                Zarejestruj
+              </Link>
+            </>
           )}
         </div>
       </div>

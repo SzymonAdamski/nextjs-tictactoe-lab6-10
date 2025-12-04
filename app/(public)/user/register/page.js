@@ -1,14 +1,22 @@
 'use client'
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function RegisterForm() {
   const router = useRouter();
+  const { user } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  
+  // Jeśli użytkownik już zalogowany, przekieruj
+  if (user) {
+    router.push("/");
+    return null;
+  }
   
   const onSubmit = (e) => {
     e.preventDefault();
@@ -33,15 +41,26 @@ export default function RegisterForm() {
     
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        alert('Konto utworzone! Teraz możesz się zalogować.');
-        router.push("/user/signin");
+        console.log("User registered!");
+        // Wyślij email weryfikacyjny
+        sendEmailVerification(userCredential.user)
+          .then(() => {
+            console.log("Email verification sent!");
+            // Przekieruj do strony weryfikacji
+            router.push("/user/verify");
+          })
+          .catch((error) => {
+            console.error("Error sending verification email:", error);
+            setError("Nie udało się wysłać emaila weryfikacyjnego");
+            setLoading(false);
+          });
       })
       .catch((error) => {
         setLoading(false);
         const errorCode = error.code;
         
         if (errorCode === 'auth/email-already-in-use') {
-          setError('Ten adres email jest już używany');
+          setError('Ten adres email jest już używany. Użyj innego adresu lub zaloguj się.');
         } else if (errorCode === 'auth/invalid-email') {
           setError('Nieprawidłowy adres email');
         } else if (errorCode === 'auth/weak-password') {
