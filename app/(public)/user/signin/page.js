@@ -42,7 +42,8 @@ function SignInFormContent() {
               router.push("/user/verify");
               return;
             }
-            router.push(returnUrl);
+            // Użyj window.location.href aby wymusić pełne przeładowanie i odświeżenie AuthContext
+            window.location.href = returnUrl;
           })
           .catch((error) => {
             setLoading(false);
