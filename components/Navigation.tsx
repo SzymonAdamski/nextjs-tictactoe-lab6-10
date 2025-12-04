@@ -1,7 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function Navigation() {
   const { user, logout } = useAuth();
