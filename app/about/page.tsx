@@ -75,11 +75,11 @@ export default function AboutPage() {
       <div className="card mb-2">
         <h2 className="mb-2">👨‍💻 Autor</h2>
         <div style={{ padding: '15px', background: '#f0f7ff', borderRadius: '5px' }}>
-          <p><strong>Imię i nazwisko:</strong> [Twoje imię i nazwisko]</p>
-          <p><strong>Nr indeksu:</strong> [Twój numer indeksu]</p>
-          <p><strong>Grupa:</strong> [Twoja grupa]</p>
+          <p><strong>Imię i nazwisko:</strong> Szymon Adamski</p>
+          <p><strong>Nr indeksu:</strong> 15223</p>
+          <p><strong>Grupa:</strong> lab1/3/PROGS</p>
           <p><strong>Data utworzenia:</strong> {new Date().toLocaleDateString('pl-PL')}</p>
-          <p><strong>Email:</strong> [Twój email]</p>
+          <p><strong>Email:</strong> szymon.adamski@microsoft.wsei.edu.pl</p>
         </div>
 
         <h3 className="mt-2 mb-1">📚 Dodatkowe informacje</h3>
