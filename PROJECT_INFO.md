@@ -9,7 +9,7 @@
 
 ## 🌐 Linki
 
-- **Wersja Live:** [https://twoj-projekt.vercel.app](https://twoj-projekt.vercel.app) *(wpisz link po wdrożeniu na Vercel)*
+- **Wersja Live:** [https://szymonadamski.github.io/nextjs-tictactoe-lab6-10/](https://szymonadamski.github.io/nextjs-tictactoe-lab6-10/)
 - **Repozytorium GitHub:** [https://github.com/SzymonAdamski/nextjs-tictactoe-lab6-10](https://github.com/SzymonAdamski/nextjs-tictactoe-lab6-10)
 
 ## ✅ Lista zrealizowanych wymagań

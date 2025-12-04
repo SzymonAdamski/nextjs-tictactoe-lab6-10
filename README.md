@@ -4,7 +4,7 @@ Projekt gry w kółko i krzyżyk stworzony dla Laboratorium 6 - zawiera wszystki
 
 ## 🌐 Wersja Live
 
-**Demo dostępne na:** [https://twoj-projekt.vercel.app](https://twoj-projekt.vercel.app) *(wpisz swój link po wdrożeniu)*
+**Demo dostępne na:** [https://szymonadamski.github.io/nextjs-tictactoe-lab6-10/](https://szymonadamski.github.io/nextjs-tictactoe-lab6-10/)
 
 Pełna instrukcja wdrożenia znajduje się w pliku [DEPLOYMENT.md](./DEPLOYMENT.md)
 
