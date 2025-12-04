@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { useAuth } from '@/lib/AuthContext';
 
 type Cell = 'X' | 'O' | null;
 type Board = Cell[][];
@@ -20,6 +23,7 @@ interface TicTacToeProps {
   initialConfig?: Partial<GameConfig>;
   onSave?: (gameState: GameState) => void;
   savedState?: GameState | null;
+  loadGameId?: string | null;
 }
 
 interface GameState {
@@ -42,7 +46,9 @@ const defaultConfig: GameConfig = {
   winningLength: 5,
 };
 
-export default function TicTacToe({ initialConfig, onSave, savedState }: TicTacToeProps) {
+export default function TicTacToe({ initialConfig, onSave, savedState, loadGameId }: TicTacToeProps) {
+  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
   const [config, setConfig] = useState<GameConfig>({ ...defaultConfig, ...initialConfig });
   const [board, setBoard] = useState<Board>(() => 
     Array(config.boardSize).fill(null).map(() => Array(config.boardSize).fill(null))
@@ -63,6 +69,51 @@ export default function TicTacToe({ initialConfig, onSave, savedState }: TicTacT
       setConfig(savedState.config);
     }
   }, [savedState]);
+
+  // Wczytaj grę z Firestore po ID
+  useEffect(() => {
+    if (loadGameId && user) {
+      loadGameFromFirestore(loadGameId);
+    }
+  }, [loadGameId, user]);
+
+  const loadGameFromFirestore = async (gameId: string) => {
+    setIsLoading(true);
+    try {
+      const docRef = doc(db, 'games', gameId);
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        
+        // Rekonstruuj planszę 2D z spłaszczonej tablicy
+        const boardSize = data.boardSize || data.config?.boardSize || 10;
+        const flatBoard = data.board || [];
+        const reconstructedBoard: Board = [];
+        
+        for (let i = 0; i < boardSize; i++) {
+          reconstructedBoard.push(flatBoard.slice(i * boardSize, (i + 1) * boardSize));
+        }
+        
+        // Ustaw stan gry
+        setBoard(reconstructedBoard);
+        setCurrentPlayer(data.currentPlayer || 'X');
+        setXMoves(data.xMoves || 0);
+        setOMoves(data.oMoves || 0);
+        setWinner(data.winner || null);
+        setConfig(data.config || { ...defaultConfig, boardSize });
+        
+        alert('Gra wczytana!');
+      } else {
+        alert('Nie znaleziono gry o tym ID');
+      }
+    } catch (error) {
+      console.error('Error loading game:', error);
+      alert('Błąd podczas wczytywania gry');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Resetuj planszę gdy zmienia się rozmiar
   useEffect(() => {
@@ -155,7 +206,12 @@ export default function TicTacToe({ initialConfig, onSave, savedState }: TicTacT
     setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
   };
 
-  const saveGame = () => {
+  const saveGame = async () => {
+    if (!user) {
+      alert('Musisz być zalogowany, aby zapisać grę!');
+      return;
+    }
+
     const gameState: GameState = {
       board,
       currentPlayer,
@@ -164,37 +220,47 @@ export default function TicTacToe({ initialConfig, onSave, savedState }: TicTacT
       winner,
       config,
     };
-    if (onSave) {
-      onSave(gameState);
+    
+    try {
+      // Firestore nie lubi zagnieżdżonych tablic - spłaszczamy planszę
+      const flatBoard = board.flat();
+      
+      // Zapisz do Firestore (bez zagnieżdżonych tablic)
+      await addDoc(collection(db, 'games'), {
+        userId: user.uid,
+        userEmail: user.email,
+        board: flatBoard, // Pojedyncza tablica zamiast 2D
+        boardSize: config.boardSize,
+        currentPlayer,
+        xMoves,
+        oMoves,
+        winner,
+        config,
+        timestamp: serverTimestamp(),
+        createdAt: new Date().toISOString(),
+      });
+      
+      // Zapisz także lokalnie (backup)
+      const savedGames = JSON.parse(localStorage.getItem('savedGames') || '[]');
+      savedGames.push({
+        id: Date.now().toString(),
+        timestamp: new Date().toISOString(),
+        gameState
+      });
+      localStorage.setItem('savedGames', JSON.stringify(savedGames));
+      localStorage.setItem('ticTacToeGame', JSON.stringify(gameState));
+      
+      alert('Gra zapisana w chmurze Firebase! ✅');
+    } catch (error) {
+      console.error('Error saving game:', error);
+      alert('Błąd podczas zapisywania gry. Sprawdź konsolę.');
     }
-    
-    // Zapisz do listy gier w localStorage
-    const savedGames = JSON.parse(localStorage.getItem('savedGames') || '[]');
-    savedGames.push({
-      id: Date.now().toString(),
-      timestamp: new Date().toISOString(),
-      gameState
-    });
-    localStorage.setItem('savedGames', JSON.stringify(savedGames));
-    
-    // Zapisz także jako bieżącą grę
-    localStorage.setItem('ticTacToeGame', JSON.stringify(gameState));
-    alert('Gra zapisana!');
   };
 
   const loadGame = () => {
-    const saved = localStorage.getItem('ticTacToeGame');
-    if (saved) {
-      const gameState: GameState = JSON.parse(saved);
-      setBoard(gameState.board);
-      setCurrentPlayer(gameState.currentPlayer);
-      setXMoves(gameState.xMoves);
-      setOMoves(gameState.oMoves);
-      setWinner(gameState.winner);
-      setConfig(gameState.config);
-      alert('Gra wczytana!');
-    } else {
-      alert('Brak zapisanej gry!');
+    // Przekieruj do dashboardu, gdzie można wybrać grę do wczytania
+    if (typeof window !== 'undefined') {
+      window.location.href = '/dashboard';
     }
   };
 

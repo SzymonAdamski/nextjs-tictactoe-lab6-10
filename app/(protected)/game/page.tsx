@@ -1,27 +1,12 @@
 'use client';
 
-import { useAuth } from '@/lib/AuthContext';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import TicTacToe from '@/components/TicTacToe';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function GamePage() {
-  const { isAuthenticated } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/login');
-    }
-  }, [isAuthenticated, router]);
-
-  if (!isAuthenticated) {
-    return (
-      <div className="text-center" style={{ padding: '50px' }}>
-        <h2>Przekierowywanie do logowania...</h2>
-      </div>
-    );
-  }
+function GameContent() {
+  const searchParams = useSearchParams();
+  const loadGameId = searchParams.get('loadGameId');
 
   return (
     <div>
@@ -39,7 +24,15 @@ export default function GamePage() {
         </ul>
       </div>
 
-      <TicTacToe />
+      <TicTacToe loadGameId={loadGameId} />
     </div>
+  );
+}
+
+export default function GamePage() {
+  return (
+    <Suspense fallback={<div>Ładowanie...</div>}>
+      <GameContent />
+    </Suspense>
   );
 }

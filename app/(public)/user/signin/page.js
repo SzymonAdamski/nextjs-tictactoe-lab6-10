@@ -1,5 +1,5 @@
 'use client'
-import { signInWithEmailAndPassword, setPersistence, browserSessionPersistence } from "firebase/auth";
+import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -30,7 +30,7 @@ function SignInFormContent() {
     const email = e.target["email"].value;
     const password = e.target["password"].value;
     
-    setPersistence(auth, browserSessionPersistence)
+    setPersistence(auth, browserLocalPersistence)
       .then(() => {
         signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
