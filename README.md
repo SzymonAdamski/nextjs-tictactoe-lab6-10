@@ -1,130 +1,262 @@
-# Kółko i krzyżyk - Next.js (Temat 5)
+# Kółko i krzyżyk - Next.js (Lab 6-10)
 
-Projekt gry w kółko i krzyżyk stworzony dla Laboratorium 6 - zawiera wszystkie wymagane funkcjonalności.
+Projekt gry w kółko i krzyżyk z Firebase Authentication, Firestore i testami E2E.
 
 ## 🌐 Wersja Live
 
-**Demo dostępne na:** [https://szymonadamski.github.io/nextjs-tictactoe-lab6-10/](https://szymonadamski.github.io/nextjs-tictactoe-lab6-10/)
+**Firebase Hosting:** [https://nextjs-tictactoe-92cc6.web.app](https://nextjs-tictactoe-92cc6.web.app)  
+**GitHub Pages:** [https://szymonadamski.github.io/nextjs-tictactoe-lab6-10/](https://szymonadamski.github.io/nextjs-tictactoe-lab6-10/)
 
-Pełna instrukcja wdrożenia znajduje się w pliku [DEPLOYMENT.md](./DEPLOYMENT.md)
+## 🎯 Zaimplementowane funkcjonalności
 
-## Funkcje
+### Lab 6-7: Firebase Authentication + Firestore
+- ✅ Rejestracja z weryfikacją email (Firebase Auth)
+- ✅ Logowanie z persystencją sesji (browserLocalPersistence)
+- ✅ Zmiana hasła dla zalogowanych użytkowników
+- ✅ Chronione ścieżki (/dashboard, /game, /user/profile)
+- ✅ Zapis gier do Firestore (kolekcja `games`)
+- ✅ Wczytywanie gier z Firestore (przycisk "Wczytaj" w dashboard)
+- ✅ Profil użytkownika z danymi adresowymi w Firestore (kolekcja `users`)
+- ✅ Synchronizacja danych między urządzeniami
 
-- ✅ Uwierzytelnianie użytkowników (localStorage + React Context)
-- ✅ Autoryzacja - chronione ścieżki (/dashboard, /game wymagają logowania)
-- ✅ Responsywny design (mobile, tablet, desktop)
-- ✅ Strona informacyjna o autorze i projekcie
-- ✅ Zapis danych gier do localStorage
+### Lab 8-10: Testy E2E (Playwright)
+- ✅ 27 testów E2E na 3 przeglądarkach (Chromium, Firefox, WebKit)
+- ✅ Testy nawigacji (linki, routing)
+- ✅ Testy logowania (poprawne/niepoprawne dane)
+- ✅ Testy zabezpieczeń (przekierowania dla niezalogowanych)
+- ✅ Automatyczne uruchamianie serwera dev przed testami
+- ✅ GitHub Actions CI/CD workflow
+
+### Funkcjonalności gry
 - ✅ Plansza o konfigurowalnym rozmiarze (nxn)
 - ✅ Wykrywanie wygranej (5 kolejnych symboli)
-- ✅ Pełna konfiguracja wyglądu planszy
-- ✅ Statystyki zapisanych gier
+- ✅ Pełna konfiguracja wyglądu (kolory, rozmiary)
+- ✅ Responsywny design (mobile, tablet, desktop)
 
-## Uruchomienie projektu
+## 🚀 Uruchomienie projektu
 
-1. Zainstaluj zależności:
+### Wymagania wstępne
+- Node.js 18+ i npm
+- Konto Firebase (darmowy plan wystarczy)
+
+### Konfiguracja Firebase
+
+1. Utwórz projekt w [Firebase Console](https://console.firebase.google.com)
+2. Włącz **Authentication** → Email/Password
+3. Włącz **Firestore Database** (tryb testowy lub z regułami)
+4. Skopiuj konfigurację Firebase Web App
+
+### Instalacja i uruchomienie
+
+1. **Sklonuj repozytorium:**
+```bash
+git clone https://github.com/SzymonAdamski/nextjs-tictactoe-lab6-10.git
+cd nextjs-tictactoe-lab6-10
+```
+
+2. **Zainstaluj zależności:**
 ```bash
 npm install
 ```
 
-2. Uruchom serwer deweloperski:
+3. **Utwórz plik `.env.local` z danymi Firebase:**
 ```env
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=wpisz-losowy-sekret-tutaj
-
 NEXT_PUBLIC_FIREBASE_API_KEY=twoj-api-key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=twoj-projekt.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=twoj-projekt-id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=twoj-projekt.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
+NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abc123
+```
+
+4. **Uruchom serwer deweloperski:**
+```bash
 npm run dev
 ```
 
-3. Otwórz [http://localhost:3000](http://localhost:3000) w przeglądarce
+5. **Otwórz w przeglądarce:** [http://localhost:3000](http://localhost:3000)
 
-4. Utwórz testowe konto w formularzu rejestracji
+6. **Zarejestruj testowe konto** i zweryfikuj email
 
-**Uwaga**: Projekt korzysta z localStorage, więc dane są przechowywane lokalnie w przeglądarce. Nie wymaga żadnej konfiguracji serwera back-end ani bazy danych.
+### Konto testowe
+Do testów dostępne jest konto:
+- Email: `szymonadamski6+testfirebase@gmail.com`
+- Hasło: `test123`
 
-## Wdrożenie na Vercel
+## 🧪 Uruchomienie testów E2E
 
-Szczegółowa instrukcja wdrożenia znajduje się w pliku [DEPLOYMENT.md](./DEPLOYMENT.md)
+Testy Playwright wymagają uruchomionej aplikacji.
 
-**Krótka instrukcja:**
-1. Wypchnij kod do repozytorium GitHub
-2. Zaloguj się na [vercel.com](https://vercel.com)
-3. Kliknij "Add New..." → "Project"
-4. Zaimportuj repozytorium z GitHub
-5. Kliknij "Deploy" (brak dodatkowych zmiennych środowiskowych)
-6. Skopiuj link do wersji live i wklej powyżej w sekcji "Wersja Live"
+### Metoda 1: Automatyczne uruchomienie
+```bash
+npx playwright test
+```
+*(Playwright automatycznie uruchomi `npm run dev` przed testami)*
 
-## Funkcjonalności gry
+### Metoda 2: Ręczne uruchomienie
+```bash
+# Terminal 1: Uruchom aplikację
+npm run dev
 
-### Podstawowe
-- Plansza o konfigurowalnym rozmiarze (domyślnie 10×10)
-- Wstawianie symboli X i O przez kliknięcie
-- Automatyczna zmiana gracza po każdym ruchu
-- Wykrywanie wygranej (5 symboli w linii - poziomo, pionowo, przekątnie)
-- Wykrywanie remisu (brak wolnych pól)
-- Blokada ruchu po zakończeniu gry
+# Terminal 2: Uruchom testy
+npx playwright test
+```
 
-### Statystyki
-- Liczba ruchów gracza X
-- Liczba ruchów gracza O
-- Liczba pozostałych wolnych pól
-- Informacja o aktualnym graczu
-- Komunikat o wygranej/remisie
+### Wyświetlenie raportu testów
+```bash
+npx playwright show-report
+```
 
-### Zapis gry
-- Zapis lokalny w przeglądarce (localStorage)
-- Wczytywanie zapisanych gier
-- Historia gier w panelu użytkownika (wymaga logowania)
-- Usuwanie zapisanych gier
-- Statystyki: wygrane X/O, remisky, liczba zapisanych gier
+### Uruchomienie testów w trybie UI (debugowanie)
+```bash
+npx playwright test --ui
+```
 
-### Konfiguracja wyglądu
-- Rozmiar planszy (3-20)
-- Rozmiar pojedynczego pola (30-100px)
-- Rozmiar symboli (10-80px)
-- Długość wygranej (3-10 symboli)
-- Kolor tła planszy
-- Kolor krawędzi
-- Kolor symbolu X
-- Kolor symbolu O
+## 📦 Wdrożenie
 
-## Struktura projektu
+### Firebase Hosting
+```bash
+npm run build
+firebase deploy
+```
+
+### GitHub Pages
+Pełna instrukcja w pliku [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+## 🎮 Szczegóły implementacji
+
+### Firebase Authentication
+- Rejestracja z automatyczną weryfikacją email
+- Logowanie z persystencją (`browserLocalPersistence`)
+- Zmiana hasła dla zalogowanych użytkowników
+- Wylogowanie z czyszczeniem sesji
+
+### Firestore Database
+
+**Kolekcja `games`:**
+```javascript
+{
+  userId: "user-uid",
+  board: [0, 1, 0, ...],  // Płaska tablica (n×n)
+  boardSize: 10,
+  currentPlayer: 0,
+  gameOver: false,
+  winner: null,
+  timestamp: serverTimestamp()
+}
+```
+
+**Kolekcja `users`:**
+```javascript
+{
+  address: {
+    street: "ul. Przykładowa 1",
+    city: "Warszawa", 
+    zipCode: "00-001"
+  }
+}
+```
+
+### Routing i ochrona
+- **Publiczne:** `/`, `/about`, `/user/signin`, `/user/register`, `/user/verify`
+- **Chronione:** `/dashboard`, `/game`, `/user/profile`, `/user/changepassword`, `/user/signout`
+- Automatyczne przekierowanie do `/user/signin?returnUrl=...` dla niezalogowanych
+
+### Testy E2E (Playwright)
+
+**27 testów na 3 przeglądarkach (81 asercji):**
+
+1. **Testy nawigacji** (`navigation.spec.js`):
+   - Kliknięcie linku "Zaloguj się" → `/user/signin`
+   - Kliknięcie linku "Gra" → `/game`
+   - Kliknięcie linku "O projekcie" → `/about`
+
+2. **Testy logowania** (`login.spec.js`):
+   - Poprawne logowanie → widoczny przycisk "Wyloguj" + dostęp do profilu
+   - Niepoprawne dane → komunikat "Nieprawidłowy email lub hasło"
+
+3. **Testy zabezpieczeń** (`protected-routes.spec.js`):
+   - `/game` → przekierowanie do `/user/signin`
+   - `/dashboard` → przekierowanie do `/user/signin`
+   - `/user/profile` → przekierowanie do `/user/signin`
+   - Publiczne strony dostępne bez logowania
+
+## 📁 Struktura projektu
 
 ```
 ├── app/
-│   ├── about/          # Strona o projekcie i autorze
-│   ├── dashboard/      # Panel użytkownika (chroniony)
-│   ├── game/           # Strona z grą (chroniona)
-│   ├── login/          # Strona logowania i rejestracji
-│   ├── layout.tsx      # Layout główny z AuthProvider i nawigacją
-│   ├── page.tsx        # Strona główna
-│   └── globals.css     # Style globalne (responsywne)
+│   ├── (public)/              # Publiczne ścieżki
+│   │   └── user/
+│   │       ├── register/      # Rejestracja
+│   │       ├── signin/        # Logowanie
+│   │       └── verify/        # Weryfikacja email
+│   ├── (protected)/           # Chronione ścieżki
+│   │   ├── layout.jsx        # Layout z AuthGuard
+│   │   ├── dashboard/        # Panel użytkownika
+│   │   ├── game/             # Gra (z loadGameId)
+│   │   └── user/
+│   │       ├── profile/      # Profil z adresem
+│   │       ├── changepassword/
+│   │       └── signout/
+│   ├── about/                # O projekcie
+│   ├── layout.tsx            # Root layout z AuthContext
+│   ├── page.tsx              # Strona główna
+│   └── globals.css           # Style globalne
 ├── components/
-│   ├── TicTacToe.tsx   # Główny komponent gry (SVG)
-│   └── Navigation.tsx  # Komponent nawigacji
-└── lib/
-    └── auth.tsx        # Context API z localStorage auth
+│   ├── TicTacToe.tsx         # Komponent gry z Firestore
+│   └── Navigation.tsx        # Nawigacja z AuthContext
+├── lib/
+│   ├── firebase.js           # Firebase config (auth, db)
+│   └── AuthContext.js        # React Context z onAuthStateChanged
+├── tests/
+│   ├── navigation.spec.js    # Testy nawigacji
+│   ├── login.spec.js         # Testy logowania
+│   └── protected-routes.spec.js  # Testy zabezpieczeń
+├── playwright.config.ts      # Konfiguracja Playwright
+├── firebase.json             # Konfiguracja Firebase Hosting
+└── .github/workflows/
+    └── playwright.yml        # GitHub Actions CI/CD
 ```
 
-## Technologie
+## 🛠 Technologie
 
-- **Next.js 14** - Framework React z App Router
-- **TypeScript** - Typowany JavaScript
-- **React Context API** - Zarządzanie stanem uwierzytelniania
-- **localStorage** - Przechowywanie danych użytkowników i gier
-- **CSS3** - Stylowanie responsywne (mobile-first)
+- **Next.js 14.2.5** - App Router, Server/Client Components, Static Export
+- **React 18** - Hooks, Context API, Suspense
+- **TypeScript** - Typowanie komponentów i funkcji
+- **Firebase 10** - Authentication, Firestore Database
+- **Playwright 1.48** - E2E testing na 3 przeglądarkach
+- **CSS3** - Responsywne style (mobile-first)
 - **SVG** - Renderowanie planszy i symboli
 
-## Symbole SVG
+## 📝 Notatki dla oceniającego
 
-Symbole X i O są renderowane za pomocą SVG:
-- **X**: Dwie przecinające się linie
-- **O**: Okrąg z przezroczystym wypełnieniem
+1. **Firestore Security Rules** - projekt używa trybu testowego, w produkcji należy dodać:
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /games/{gameId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
 
-## Autor
+2. **Testy E2E** - wymagają konta testowego z zweryfikowanym emailem. Konto jest już utworzone i gotowe do użycia.
 
-Wpisz swoje dane w pliku `app/about/page.tsx` w sekcji "Autor"
+3. **Static Export** - projekt używa `output: 'export'` w `next.config.js`, dlatego:
+   - ❌ Nie można użyć `npm run start`
+   - ✅ Można użyć `npm run dev` lub `npx serve@latest out`
 
-## Licencja
+4. **Dodatkowe pliki dokumentacji:**
+   - `DEPLOYMENT.md` - szczegółowa instrukcja wdrożenia
+   - `INSTRUKCJA.md` - instrukcje w języku polskim
+   - `PROJECT_INFO.md` - informacje o projekcie
 
-Projekt edukacyjny dla Laboratorium 6-10
+## 👨‍💻 Autor
+
+**Szymon Adamski**  
+Projekt laboratoryjny - Aplikacje internetowe (Lab 6-10)

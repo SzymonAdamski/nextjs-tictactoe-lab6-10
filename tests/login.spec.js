@@ -3,32 +3,29 @@ const { test, expect } = require('@playwright/test');
 test.describe('Login Tests', () => {
   test.beforeEach(async ({ page }) => {
     // Przed każdym testem otwórz stronę główną
-    await page.goto('http://localhost:3000/');
+    await page.goto('/');
   });
 
   test('successful login redirects to profile', async ({ page }) => {
     // Przejdź do strony logowania
     await page.click('text=Zaloguj się');
-    await expect(page).toHaveURL('http://localhost:3000/user/signin');
+    await expect(page).toHaveURL('/user/signin');
 
     // Wypełnij formularz logowania
-    await page.getByLabel('Email').fill('szymonadamski6@gmail.com');
-    await page.getByLabel('Hasło').fill('test123');
+    await page.fill('#email', 'szymonadamski6+testfirebase@gmail.com');
+    await page.fill('#password', 'test123');
 
     // Kliknij przycisk logowania
-    await page.getByRole('button', { name: 'Zaloguj się' }).click();
+    await page.click('button[type="submit"]');
 
-    // Poczekaj na przekierowanie (może być opóźnienie)
-    await page.waitForTimeout(500);
-
-    // Sprawdź czy użytkownik jest zalogowany (sprawdź nawigację)
-    await expect(page.locator('text=Dashboard')).toBeVisible();
+    // Poczekaj aż przycisk "Wyloguj" będzie widoczny (potwierdza że użytkownik jest zalogowany)
+    await expect(page.locator('text=Wyloguj')).toBeVisible({ timeout: 10000 });
     
-    // Spróbuj przejść do profilu
-    await page.goto('http://localhost:3000/user/profile');
+    // Przejdź do profilu
+    await page.goto('/user/profile');
     
     // Sprawdź czy jesteśmy na stronie profilu (nie przekierowano do logowania)
-    await expect(page).toHaveURL('http://localhost:3000/user/profile');
+    await expect(page).toHaveURL('/user/profile');
     await expect(page.locator('h1')).toContainText('Profil użytkownika');
   });
 
@@ -37,13 +34,13 @@ test.describe('Login Tests', () => {
     await page.click('text=Zaloguj się');
 
     // Wypełnij formularz nieprawidłowymi danymi
-    await page.getByLabel('Email').fill('wrong@example.com');
-    await page.getByLabel('Hasło').fill('wrongpassword');
+    await page.fill('#email', 'wrong@example.com');
+    await page.fill('#password', 'wrongpassword');
 
     // Kliknij przycisk logowania
-    await page.getByRole('button', { name: 'Zaloguj się' }).click();
+    await page.click('button[type="submit"]');
 
-    // Sprawdź czy pojawił się komunikat o błędzie
-    await expect(page.locator('text=Nieprawidłowy email lub hasło')).toBeVisible();
+    // Sprawdź czy pojawił się komunikat o błędzie (Firebase zwraca "Nieprawidłowy email lub hasło")
+    await expect(page.getByText('Nieprawidłowy email lub hasło')).toBeVisible({ timeout: 5000 });
   });
 });

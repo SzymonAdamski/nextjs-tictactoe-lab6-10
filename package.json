@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "export": "next build",
-    "deploy": "gh-pages -d out"
+    "deploy": "gh-pages -d out",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report"
   },
   "dependencies": {
     "@next/env": "^16.0.7",
