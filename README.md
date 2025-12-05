@@ -38,13 +38,6 @@ Projekt gry w kółko i krzyżyk z Firebase Authentication, Firestore i testami 
 - Node.js 18+ i npm
 - Konto Firebase (darmowy plan wystarczy)
 
-### Konfiguracja Firebase
-
-1. Utwórz projekt w [Firebase Console](https://console.firebase.google.com)
-2. Włącz **Authentication** → Email/Password
-3. Włącz **Firestore Database** (tryb testowy lub z regułami)
-4. Skopiuj konfigurację Firebase Web App
-
 ### Instalacja i uruchomienie
 
 1. **Sklonuj repozytorium:**
@@ -58,24 +51,14 @@ cd nextjs-tictactoe-lab6-10
 npm install
 ```
 
-3. **Utwórz plik `.env.local` z danymi Firebase:**
-```env
-NEXT_PUBLIC_FIREBASE_API_KEY=twoj-api-key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=twoj-projekt.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=twoj-projekt-id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=twoj-projekt.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
-NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abc123
-```
-
-4. **Uruchom serwer deweloperski:**
+3. **Uruchom serwer deweloperski:**
 ```bash
 npm run dev
 ```
 
-5. **Otwórz w przeglądarce:** [http://localhost:3000](http://localhost:3000)
+4. **Otwórz w przeglądarce:** [http://localhost:3000](http://localhost:3000)
 
-6. **Zarejestruj testowe konto** i zweryfikuj email
+**Uwaga:** Projekt zawiera plik `.env` z konfiguracją Firebase - nie musisz nic konfigurować!
 
 ### Konto testowe
 Do testów dostępne jest konto:

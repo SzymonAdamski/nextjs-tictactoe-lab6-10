@@ -164,13 +164,8 @@ npm run dev
 ```
 
 ### Problem: Firebase connection error
-Sprawdź plik `.env.local` - powinien zawierać:
-```
-NEXT_PUBLIC_FIREBASE_API_KEY=...
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
-# itd.
-```
+Projekt zawiera plik `.env` z konfiguracją Firebase. 
+Jeśli mimo to występują problemy, sprawdź konsolę przeglądarki (F12).
 
 ---
 
