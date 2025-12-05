@@ -455,10 +455,12 @@ export default function TicTacToe({ initialConfig, onSave, savedState, loadGameI
               type="number"
               min="3"
               max="20"
-              value={config.boardSize}
-              onChange={(e) => {
+              defaultValue={config.boardSize}
+              onBlur={(e) => {
                 const value = parseInt(e.target.value);
-                if (!isNaN(value) && value >= 3 && value <= 20) {
+                if (isNaN(value) || value < 3 || value > 20) {
+                  e.target.value = config.boardSize.toString();
+                } else {
                   setConfig({ ...config, boardSize: value });
                 }
               }}
@@ -472,10 +474,12 @@ export default function TicTacToe({ initialConfig, onSave, savedState, loadGameI
               type="number"
               min="30"
               max="100"
-              value={config.cellSize}
-              onChange={(e) => {
+              defaultValue={config.cellSize}
+              onBlur={(e) => {
                 const value = parseInt(e.target.value);
-                if (!isNaN(value) && value >= 30 && value <= 100) {
+                if (isNaN(value) || value < 30 || value > 100) {
+                  e.target.value = config.cellSize.toString();
+                } else {
                   setConfig({ ...config, cellSize: value });
                 }
               }}
@@ -489,10 +493,12 @@ export default function TicTacToe({ initialConfig, onSave, savedState, loadGameI
               type="number"
               min="10"
               max="80"
-              value={config.symbolSize}
-              onChange={(e) => {
+              defaultValue={config.symbolSize}
+              onBlur={(e) => {
                 const value = parseInt(e.target.value);
-                if (!isNaN(value) && value >= 10 && value <= 80) {
+                if (isNaN(value) || value < 10 || value > 80) {
+                  e.target.value = config.symbolSize.toString();
+                } else {
                   setConfig({ ...config, symbolSize: value });
                 }
               }}
@@ -506,10 +512,12 @@ export default function TicTacToe({ initialConfig, onSave, savedState, loadGameI
               type="number"
               min="3"
               max="10"
-              value={config.winningLength}
-              onChange={(e) => {
+              defaultValue={config.winningLength}
+              onBlur={(e) => {
                 const value = parseInt(e.target.value);
-                if (!isNaN(value) && value >= 3 && value <= 10) {
+                if (isNaN(value) || value < 3 || value > 10) {
+                  e.target.value = config.winningLength.toString();
+                } else {
                   setConfig({ ...config, winningLength: value });
                 }
               }}
