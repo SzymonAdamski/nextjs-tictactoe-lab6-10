@@ -9,7 +9,7 @@
 
 ## 🌐 Linki
 
-- **Wersja Live:** [https://szymonadamski.github.io/nextjs-tictactoe-lab6-10/](https://szymonadamski.github.io/nextjs-tictactoe-lab6-10/)
+- **Wersja Live:** [https://nextjs-tictactoe-92cc6.web.app](https://nextjs-tictactoe-92cc6.web.app)
 - **Repozytorium GitHub:** [https://github.com/SzymonAdamski/nextjs-tictactoe-lab6-10](https://github.com/SzymonAdamski/nextjs-tictactoe-lab6-10)
 
 ## ✅ Lista zrealizowanych wymagań

@@ -4,8 +4,7 @@ Projekt gry w kółko i krzyżyk z Firebase Authentication, Firestore i testami 
 
 ## 🌐 Wersja Live
 
-**Firebase Hosting:** [https://nextjs-tictactoe-92cc6.web.app](https://nextjs-tictactoe-92cc6.web.app)  
-**GitHub Pages:** [https://szymonadamski.github.io/nextjs-tictactoe-lab6-10/](https://szymonadamski.github.io/nextjs-tictactoe-lab6-10/)
+**Firebase Hosting:** [https://nextjs-tictactoe-92cc6.web.app](https://nextjs-tictactoe-92cc6.web.app)
 
 ## 🎯 Zaimplementowane funkcjonalności
 
@@ -120,8 +119,7 @@ npm run build
 firebase deploy
 ```
 
-### GitHub Pages
-Pełna instrukcja w pliku [DEPLOYMENT.md](./DEPLOYMENT.md)
+Pełna instrukcja wdrożenia znajduje się w pliku [DEPLOYMENT.md](./DEPLOYMENT.md)
 
 ## 🎮 Szczegóły implementacji
 
