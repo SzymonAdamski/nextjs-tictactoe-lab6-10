@@ -1,14 +1,46 @@
 'use client'
 import { updateProfile } from "firebase/auth";
 import { useAuth } from "@/lib/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { db } from '@/lib/firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export default function ProfileForm() {
   const { user } = useAuth();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [dataLoading, setDataLoading] = useState(true);
+  const [address, setAddress] = useState({
+    street: "",
+    city: "",
+    zipCode: ""
+  });
+
+  // Wczytaj dane adresowe z Firestore
+  useEffect(() => {
+    if (user) {
+      loadUserAddress();
+    }
+  }, [user]);
+
+  const loadUserAddress = async () => {
+    setDataLoading(true);
+    try {
+      const snapshot = await getDoc(doc(db, "users", user.uid));
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        if (data.address) {
+          setAddress(data.address);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading address:", error);
+    } finally {
+      setDataLoading(false);
+    }
+  };
   
   if (!user) {
     return (
@@ -26,7 +58,7 @@ export default function ProfileForm() {
     );
   }
   
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -34,21 +66,42 @@ export default function ProfileForm() {
     
     const displayName = e.target["displayName"].value;
     const photoURL = e.target["photoURL"].value;
+    const street = e.target["street"].value;
+    const city = e.target["city"].value;
+    const zipCode = e.target["zipCode"].value;
     
-    updateProfile(user, {
-      displayName: displayName,
-      photoURL: photoURL,
-    })
-      .then(() => {
-        console.log("Profile updated");
-        setSuccess("Profil został zaktualizowany pomyślnie!");
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error.message);
-        setLoading(false);
-        console.error("Error updating profile:", error);
+    try {
+      // Aktualizuj profil w Firebase Auth
+      await updateProfile(user, {
+        displayName: displayName,
+        photoURL: photoURL,
       });
+      
+      // Zapisz adres w Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        address: {
+          city: city,
+          street: street,
+          zipCode: zipCode
+        },
+        displayName: displayName,
+        photoURL: photoURL,
+        email: user.email,
+        updatedAt: new Date().toISOString()
+      });
+      
+      console.log("Profile and address updated");
+      setSuccess("Profil i adres zostały zaktualizowane pomyślnie!");
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      if (error.code === 'permission-denied') {
+        setError('Brak uprawnień do zapisu danych. Zaloguj się ponownie.');
+      } else {
+        setError(error.message);
+      }
+      console.error("Error updating profile:", error);
+    }
   };
   
   return (
@@ -105,10 +158,55 @@ export default function ProfileForm() {
               className="form-input"
               placeholder="https://example.com/photo.jpg"
               defaultValue={user.photoURL || ""}
+              disabled={dataLoading}
             />
             <small style={{ color: '#666', fontSize: '12px' }}>
               Wklej link do swojego zdjęcia profilowego
             </small>
+          </div>
+
+          <h3 style={{ marginTop: '20px', marginBottom: '10px' }}>📍 Adres</h3>
+
+          <div className="form-group">
+            <label className="form-label">Ulica</label>
+            <input
+              id="street"
+              name="street"
+              type="text"
+              className="form-input"
+              placeholder="np. Kwiatowa 15"
+              value={address.street}
+              onChange={(e) => setAddress({ ...address, street: e.target.value })}
+              disabled={dataLoading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Miasto</label>
+            <input
+              id="city"
+              name="city"
+              type="text"
+              className="form-input"
+              placeholder="np. Warszawa"
+              value={address.city}
+              onChange={(e) => setAddress({ ...address, city: e.target.value })}
+              disabled={dataLoading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Kod pocztowy</label>
+            <input
+              id="zipCode"
+              name="zipCode"
+              type="text"
+              className="form-input"
+              placeholder="np. 00-001"
+              value={address.zipCode}
+              onChange={(e) => setAddress({ ...address, zipCode: e.target.value })}
+              disabled={dataLoading}
+            />
           </div>
 
           {error && (
@@ -137,11 +235,11 @@ export default function ProfileForm() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || dataLoading}
             className="btn btn-primary"
             style={{ width: '100%' }}
           >
-            {loading ? 'Zapisywanie...' : 'Zapisz zmiany'}
+            {dataLoading ? 'Ładowanie danych...' : loading ? 'Zapisywanie...' : 'Zapisz zmiany'}
           </button>
 
           <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
