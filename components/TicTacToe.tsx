@@ -438,7 +438,12 @@ export default function TicTacToe({ initialConfig, onSave, savedState, loadGameI
               min="3"
               max="20"
               value={config.boardSize}
-              onChange={(e) => setConfig({ ...config, boardSize: parseInt(e.target.value) })}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                if (!isNaN(value) && value >= 3 && value <= 20) {
+                  setConfig({ ...config, boardSize: value });
+                }
+              }}
               className="form-input"
             />
           </div>
@@ -450,7 +455,12 @@ export default function TicTacToe({ initialConfig, onSave, savedState, loadGameI
               min="30"
               max="100"
               value={config.cellSize}
-              onChange={(e) => setConfig({ ...config, cellSize: parseInt(e.target.value) })}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                if (!isNaN(value) && value >= 30 && value <= 100) {
+                  setConfig({ ...config, cellSize: value });
+                }
+              }}
               className="form-input"
             />
           </div>
@@ -462,7 +472,12 @@ export default function TicTacToe({ initialConfig, onSave, savedState, loadGameI
               min="10"
               max="80"
               value={config.symbolSize}
-              onChange={(e) => setConfig({ ...config, symbolSize: parseInt(e.target.value) })}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                if (!isNaN(value) && value >= 10 && value <= 80) {
+                  setConfig({ ...config, symbolSize: value });
+                }
+              }}
               className="form-input"
             />
           </div>
@@ -474,7 +489,12 @@ export default function TicTacToe({ initialConfig, onSave, savedState, loadGameI
               min="3"
               max="10"
               value={config.winningLength}
-              onChange={(e) => setConfig({ ...config, winningLength: parseInt(e.target.value) })}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                if (!isNaN(value) && value >= 3 && value <= 10) {
+                  setConfig({ ...config, winningLength: value });
+                }
+              }}
               className="form-input"
             />
           </div>
