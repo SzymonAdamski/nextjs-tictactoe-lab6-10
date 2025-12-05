@@ -49,10 +49,21 @@ const defaultConfig: GameConfig = {
 export default function TicTacToe({ initialConfig, onSave, savedState, loadGameId }: TicTacToeProps) {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [config, setConfig] = useState<GameConfig>({ ...defaultConfig, ...initialConfig });
-  const [board, setBoard] = useState<Board>(() => 
-    Array(config.boardSize).fill(null).map(() => Array(config.boardSize).fill(null))
-  );
+  
+  // Walidacja initialConfig - upewnij się że boardSize jest liczbą
+  const validatedConfig = {
+    ...defaultConfig,
+    ...initialConfig,
+    boardSize: isNaN(initialConfig?.boardSize || defaultConfig.boardSize) 
+      ? defaultConfig.boardSize 
+      : (initialConfig?.boardSize || defaultConfig.boardSize)
+  };
+  
+  const [config, setConfig] = useState<GameConfig>(validatedConfig);
+  const [board, setBoard] = useState<Board>(() => {
+    const size = config.boardSize || defaultConfig.boardSize;
+    return Array(size).fill(null).map(() => Array(size).fill(null));
+  });
   const [currentPlayer, setCurrentPlayer] = useState<'X' | 'O'>('X');
   const [xMoves, setXMoves] = useState(0);
   const [oMoves, setOMoves] = useState(0);
@@ -101,7 +112,13 @@ export default function TicTacToe({ initialConfig, onSave, savedState, loadGameI
         setXMoves(data.xMoves || 0);
         setOMoves(data.oMoves || 0);
         setWinner(data.winner || null);
-        setConfig(data.config || { ...defaultConfig, boardSize });
+        
+        // Waliduj config przed ustawieniem
+        const loadedConfig = data.config || { ...defaultConfig, boardSize };
+        if (isNaN(loadedConfig.boardSize)) {
+          loadedConfig.boardSize = defaultConfig.boardSize;
+        }
+        setConfig(loadedConfig);
         
         alert('Gra wczytana!');
       } else {
@@ -121,7 +138,8 @@ export default function TicTacToe({ initialConfig, onSave, savedState, loadGameI
   }, [config.boardSize]);
 
   const resetGame = () => {
-    setBoard(Array(config.boardSize).fill(null).map(() => Array(config.boardSize).fill(null)));
+    const size = isNaN(config.boardSize) ? defaultConfig.boardSize : config.boardSize;
+    setBoard(Array(size).fill(null).map(() => Array(size).fill(null)));
     setCurrentPlayer('X');
     setXMoves(0);
     setOMoves(0);
@@ -315,8 +333,8 @@ export default function TicTacToe({ initialConfig, onSave, savedState, loadGameI
         overflowX: 'auto'
       }}>
         <svg
-          width={config.boardSize * config.cellSize}
-          height={config.boardSize * config.cellSize}
+          width={(config.boardSize || 10) * (config.cellSize || 50)}
+          height={(config.boardSize || 10) * (config.cellSize || 50)}
           style={{ 
             background: config.backgroundColor,
             border: `2px solid ${config.gridColor}`,
